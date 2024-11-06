@@ -33,4 +33,20 @@ struct TestingRequestMethod {
         let responses = try await (first, second)
         print(responses)
     }
+    
+    @Test("Testing request token")
+    func requestingToken() async throws {
+        let requestToken = RequestToken()
+        Task {
+            try await Task.sleep(for: .milliseconds(200))
+            await requestToken.cancel()
+        }
+        do {
+            _ = try await session.requestAsync(.get(department: false), requestToken: requestToken)
+        } catch {
+            let isCancelled = if case .cancelled = error { true } else { false }
+            print(isCancelled, error)
+            #expect(isCancelled)
+        }
+    }
 }

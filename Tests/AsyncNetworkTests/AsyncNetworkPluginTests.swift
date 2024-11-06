@@ -40,6 +40,31 @@ struct Test {
     }
 }
 
+struct FullbackPlugin: PluginType {
+    typealias Provider = AsyncNetworkProvider<AnyEndpoint>
+
+    private let _provider: Provider
+
+    init(
+        backupServer: URL,
+        session: Session = AsyncNetworkProviderTypeDefaultImplementation.defaultAlamofireSession(),
+        requestEndpointClosure: @escaping Provider.RequestEndpointClosure = AsyncNetworkProviderTypeDefaultImplementation.defaultEndpointMapping,
+        requestClosure: @escaping Provider.RequestClosure = AsyncNetworkProviderTypeDefaultImplementation.defaultRequestMapping,
+        plugins: [PluginType] = []
+    ) {
+        _provider = .init(baseURL: backupServer, session: session, requestEndpointClosure: requestEndpointClosure, requestClosure: requestClosure, plugins: plugins)
+    }
+
+    func process(_ result: Result<Response, AsyncNetworkError>, endpoint: any EndpointType, configuration: RequestingConfiguration) async throws -> Response {
+        do {
+            return try result.get()
+        } catch {
+            return try await _provider.requestAsync(endpoint.eraseToAnyEndpoint(), requestToken: configuration.requestToken, progress: configuration.progress)
+        }
+    }
+}
+
+
 enum MockDataAPI: EndpointType, TestableType {
     case test1, test2, test3
 

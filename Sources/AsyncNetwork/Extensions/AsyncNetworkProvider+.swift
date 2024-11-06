@@ -129,6 +129,12 @@ extension AsyncNetworkProvider {
                 plugins.forEach { $0.didReceive(result, endpoint: endpoint, configuration: configuration) }
             } catch let error as AsyncNetworkError {
                 result = .failure(error)
+            } catch let error as AFError {
+                if case .explicitlyCancelled = error {
+                    result = .failure(.cancelled)
+                } else {
+                    result = .failure(.underlying(error, nil))
+                }
             } catch {
                 result = .failure(.underlying(error, nil))
             }

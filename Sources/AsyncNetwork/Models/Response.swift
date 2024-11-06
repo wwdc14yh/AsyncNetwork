@@ -34,6 +34,9 @@ public struct Response: Sendable, CustomDebugStringConvertible, Equatable {
     init(_ responseKind: ResponseKind) throws(AsyncNetworkError) {
         guard let statusCode = responseKind.statusCode, let data = responseKind.data else {
             if let error = responseKind.error {
+                if case .explicitlyCancelled = error {
+                    throw .cancelled
+                }
                 throw .underlying(error, nil)
             } else {
                 throw .unexpectedErrorCaptured
