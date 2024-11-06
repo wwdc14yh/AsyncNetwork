@@ -14,13 +14,15 @@ public enum AsyncNetworkProviderTypeDefaultImplementation {
         guard let baseURL = provider.baseURL else {
             throw AsyncNetworkError.invalidURL
         }
-        let fullURL =
-            if #available(macOS 13.0, *) {
-                baseURL.appending(path: endpoint.path)
-            } else {
-                baseURL.appendingPathComponent(endpoint.path, isDirectory: false)
-            }
-        return RequestEndpoint(url: fullURL.absoluteString,
+        func removeEdgeSlash(from string: String, isFirst: Bool) -> String {
+            let hasSlash = isFirst ? string.hasPrefix("/") : string.hasSuffix("/")
+            guard hasSlash else { return string }
+            return isFirst ? String(string.dropFirst()) : String(string.dropLast())
+        }
+        let baseURLString: String = removeEdgeSlash(from: baseURL.absoluteString, isFirst: false)
+        let path: String = removeEdgeSlash(from: endpoint.path, isFirst: true)
+
+        return RequestEndpoint(url: baseURLString + "/" + path,
                                method: endpoint.method,
                                task: endpoint.task,
                                httpHeaderFields: endpoint.headers)
