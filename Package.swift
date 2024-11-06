@@ -3,22 +3,27 @@
 
 import PackageDescription
 
-let package = Package(
-    name: "AsyncNetworkSession",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "AsyncNetworkSession",
-            targets: ["AsyncNetworkSession"]),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "AsyncNetworkSession"),
-        .testTarget(
-            name: "AsyncNetworkSessionTests",
-            dependencies: ["AsyncNetworkSession"]
-        ),
-    ]
-)
+let package = Package(name: "AsyncNetwork",
+                      platforms: [
+                          .macOS(.v10_15),
+                          .iOS(.v13),
+                          .tvOS(.v12),
+                          .watchOS(.v4),
+                      ],
+                      products: [
+                          .library(name: "AsyncNetwork",
+                                   targets: ["AsyncNetwork"]),
+                      ],
+                      dependencies: [
+                          .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.0.0")),
+                      ],
+                      targets: [
+                          .target(name: "AsyncNetwork",
+                                  dependencies: [
+                                      .product(name: "Alamofire", package: "Alamofire"),
+                                  ]),
+                          .testTarget(name: "AsyncNetworkTests",
+                                      dependencies: ["AsyncNetwork"],
+                                      resources: [.process("Resources")]),
+                      ],
+                      swiftLanguageModes: [.v6])
