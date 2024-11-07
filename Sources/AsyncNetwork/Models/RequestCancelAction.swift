@@ -1,11 +1,6 @@
 import Alamofire
 import Foundation
 
-@globalActor
-actor AsynchronousActor: GlobalActor {
-    public static let shared = AsynchronousActor()
-}
-
 public actor RequestToken: Sendable {
     public static var `default`: RequestToken { .init() }
 

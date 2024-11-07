@@ -4,10 +4,10 @@ import Foundation
 final class AsyncRequestInterceptor: RequestInterceptor {
     typealias TransformURLRequest = @Sendable (URLRequest) async throws -> URLRequest
     
-    @AsynchronousActor
+    @AsyncNetworkActor
     var prepare: TransformURLRequest?
 
-    @AsynchronousActor
+    @AsyncNetworkActor
     var willSend: (@Sendable (URLRequest) -> Void)?
 
     init(prepare: TransformURLRequest? = nil, willSend: (@Sendable (URLRequest) -> Void)? = nil) {
@@ -27,12 +27,12 @@ final class AsyncRequestInterceptor: RequestInterceptor {
         }
     }
 
-    @AsynchronousActor
+    @AsyncNetworkActor
     func setWillSend(_ willSend: @escaping @Sendable (URLRequest) -> Void) {
         self.willSend = willSend
     }
     
-    @AsynchronousActor
+    @AsyncNetworkActor
     private func _willSend(_ request: URLRequest) {
         willSend?(request)
     }
