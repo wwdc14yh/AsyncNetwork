@@ -1,8 +1,8 @@
 import Foundation
 
 public struct NetworkLoggerPlugin: PluginType {
-    static var `default`: NetworkLoggerPlugin { NetworkLoggerPlugin(configuration: Configuration(logOptions: .default)) }
-    static var verbose: NetworkLoggerPlugin { NetworkLoggerPlugin(configuration: Configuration(logOptions: .verbose)) }
+    public static var `default`: NetworkLoggerPlugin { NetworkLoggerPlugin(configuration: Configuration(logOptions: .default)) }
+    public static var verbose: NetworkLoggerPlugin { NetworkLoggerPlugin(configuration: Configuration(logOptions: .verbose)) }
 
     let _configuration: Configuration
 
