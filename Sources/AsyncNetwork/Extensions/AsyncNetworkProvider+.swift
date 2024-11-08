@@ -109,7 +109,7 @@ extension AsyncNetworkProvider {
         var result = Result<URLRequest, AsyncNetworkError>.success(urlRequest)
         for plugin in plugins {
             do {
-                let value = try await plugin.prepare(urlRequest, endpoint: endpoint, configuration: configuration)
+                let value = try await plugin.prepare((try? result.get()) ?? urlRequest, endpoint: endpoint, configuration: configuration)
                 result = .success(value)
             } catch let error as AsyncNetworkError {
                 result = .failure(error)
