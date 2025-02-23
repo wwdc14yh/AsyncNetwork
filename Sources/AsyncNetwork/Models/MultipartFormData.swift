@@ -28,7 +28,7 @@ public struct MultipartFormData: Sendable, Hashable {
     /// The MIME type
     public let mimeType: String?
     
-    public init(provider: FormDataProvider, name: String, fileName: String?, mimeType: String?) {
+    public init(provider: FormDataProvider, name: String, fileName: String? = nil, mimeType: String? = nil) {
         self.provider = provider
         self.name = name
         self.fileName = fileName
