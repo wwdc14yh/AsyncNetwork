@@ -126,7 +126,6 @@ extension AsyncNetworkProvider {
             do {
                 let value = try await plugin.process(result, endpoint: endpoint, configuration: configuration)
                 result = .success(value)
-                plugins.forEach { $0.didReceive(result, endpoint: endpoint, configuration: configuration) }
             } catch let error as AsyncNetworkError {
                 result = .failure(error)
             } catch let error as AFError {
@@ -138,6 +137,7 @@ extension AsyncNetworkProvider {
             } catch {
                 result = .failure(.underlying(error, nil))
             }
+            plugin.didReceive(result, endpoint: endpoint, configuration: configuration)
         }
         return try result.get()
     }
